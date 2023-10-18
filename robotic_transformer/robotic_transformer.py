@@ -8,9 +8,14 @@ from classifier_free_guidance_pytorch import (AttentionTextConditioner,
                                               classifier_free_guidance)
 from einops import rearrange, reduce, repeat
 from einops.layers.torch import Rearrange
-from models import LayerNorm, MaxViT, TokenLearner, Transformer
 from torch import nn
-from utils import default, pack_one, posemb_sincos_1d, unpack_one
+
+from robotic_transformer.models.layer_norm import LayerNorm
+from robotic_transformer.models.max_vit import MaxViT
+from robotic_transformer.models.token_learner import TokenLearner
+from robotic_transformer.models.transformer import Transformer
+from robotic_transformer.utils import (default, pack_one, posemb_sincos_1d,
+                                       unpack_one)
 
 
 @beartype

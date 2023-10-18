@@ -4,9 +4,10 @@ from typing import Callable, Optional
 import torch
 import torch.nn.functional as F
 from einops import rearrange, repeat
-from models import LayerNorm
 from torch import einsum, nn
-from utils import default, exists
+
+from robotic_transformer.models.layer_norm import LayerNorm
+from robotic_transformer.utils import default, exists
 
 
 class Attention(nn.Module):

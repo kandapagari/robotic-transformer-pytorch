@@ -3,10 +3,14 @@ from typing import Callable, List, Optional, Tuple
 
 from beartype import beartype
 from einops.layers.torch import Rearrange, Reduce
-from models import FeedForward, LayerNorm, MBConv, Residual
-from models.attention import Attention
 from torch import nn
-from utils import default, exists
+
+from robotic_transformer.models.attention import Attention
+from robotic_transformer.models.feed_forward import FeedForward
+from robotic_transformer.models.layer_norm import LayerNorm
+from robotic_transformer.models.mb_conv import MBConv
+from robotic_transformer.models.residual import Residual
+from robotic_transformer.utils import default, exists
 
 
 class MaxViT(nn.Module):

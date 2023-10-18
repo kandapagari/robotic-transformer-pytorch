@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-from models import LayerNorm
 from torch import nn
-from utils import exists
+
+from robotic_transformer.models.layer_norm import LayerNorm
+from robotic_transformer.utils import exists
 
 
 class FeedForward(nn.Module):

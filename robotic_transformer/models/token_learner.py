@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 from einops import rearrange, reduce, repeat
 from torch import nn
-from utils import pack_one, unpack_one
+
+from robotic_transformer.utils import pack_one, unpack_one
 
 
 class TokenLearner(nn.Module):

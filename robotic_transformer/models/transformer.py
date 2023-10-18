@@ -2,10 +2,11 @@
 from typing import Callable, Optional, Tuple
 
 from beartype import beartype
-from models import FeedForward
-from models.attention import TransformerAttention
 from torch import nn
-from utils import default
+
+from robotic_transformer.models.attention import TransformerAttention
+from robotic_transformer.models.feed_forward import FeedForward
+from robotic_transformer.utils import default
 
 
 @beartype
