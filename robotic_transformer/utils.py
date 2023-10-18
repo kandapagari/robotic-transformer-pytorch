@@ -24,7 +24,7 @@ def pack_one(x: T, pattern: str) -> tuple:
     return pack([x], pattern)
 
 
-def unpack_one(x: T, ps: list, pattern: str):
+def unpack_one(x: T, ps: list, pattern: str) -> U:
     return unpack(x, ps, pattern)[0]
 
 
