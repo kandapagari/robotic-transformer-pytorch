@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Callable, List, Optional, Tuple
+from typing import Callable
 
 from beartype import beartype
 from einops.layers.torch import Rearrange, Reduce
@@ -91,8 +91,8 @@ class MaxViT(nn.Module):
     def forward(
         self,
         x,
-        texts: Optional[List[str]] = None,
-        cond_fns: Optional[Tuple[Callable, ...]] = None,
+        texts: list[str] | None = None,
+        cond_fns: tuple[Callable, ...] | None = None,
         cond_drop_prob=0.,
         return_embeddings=False
     ):
