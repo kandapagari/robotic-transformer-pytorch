@@ -272,7 +272,6 @@ class Conv2dStaticSamePadding(nn.Conv2d):
         super().__init__(in_channels, out_channels, kernel_size, stride, **kwargs)
         self.stride = self.stride if len(self.stride) == 2 else [
             self.stride[0]] * 2
-
         # Calculate padding based on image size and save it
         assert image_size is not None
         ih, iw = (image_size, image_size) if isinstance(
@@ -363,7 +362,6 @@ class MaxPool2dStaticSamePadding(nn.MaxPool2d):
             2 if isinstance(self.kernel_size, int) else self.kernel_size
         self.dilation = [self.dilation] * \
             2 if isinstance(self.dilation, int) else self.dilation
-
         # Calculate padding based on image size and save it
         assert image_size is not None
         ih, iw = (image_size, image_size) if isinstance(
@@ -423,11 +421,9 @@ class BlockDecoder(object):
             if len(splits) >= 2:
                 key, value = splits[:2]
                 options[key] = value
-
         # Check stride
         assert (('s' in options and len(options['s']) == 1) or
                 (len(options['s']) == 2 and options['s'][0] == options['s'][1]))
-
         return BlockArgs(
             num_repeat=int(options['r']),
             kernel_size=int(options['k']),
@@ -553,7 +549,6 @@ def efficientnet(width_coefficient=None, depth_coefficient=None, image_size=None
         depth_coefficient=depth_coefficient,
         image_size=image_size,
         dropout_rate=dropout_rate,
-
         num_classes=num_classes,
         batch_norm_momentum=0.99,
         batch_norm_epsilon=1e-3,

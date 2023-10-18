@@ -26,7 +26,6 @@ class SpatialAttention(nn.Module):
         # x = x.view(B, C, H, W)
         # 上句代码有问题，修改如下
         x = x.permute(0, 3, 1, 2)
-
         # 获取x在第一个维度（通道）最大值并添加维度1（原来的通道维度），mx.shape = (B, 1, H, W)
         mx = torch.max(x, 1)[0].unsqueeze(1)
         # 输入x的第1维度上计算平均值并添加维度1（原来的通道维度）, avg.shape = (B, 1, H, W)
@@ -37,7 +36,6 @@ class SpatialAttention(nn.Module):
         weight_map = torch.sigmoid(fmap)
         # out.shape = (B, C), x * weight_map = (B, C, H, W)
         out = (x * weight_map).mean(dim=(-2, -1))
-
         return out, x * weight_map
 
 
@@ -67,14 +65,11 @@ class TokenFuser(nn.Module):
     def forward(self, y, x):
         B, S, C = y.shape
         B, H, W, C = x.shape
-
         Y = self.projection(y.view(B, C, S)).view(B, S, C)
         Bw = torch.sigmoid(self.Bi(x)).view(B, H * W, S)  # [B, HW, S]
         BwY = torch.matmul(Bw, Y)
-
         _, xj = self.spatial_attn(x)
         xj = xj.view(B, H * W, C)
-
         return (BwY + xj).view(B, H, W, C)
 
 

@@ -9,17 +9,14 @@ from film_efficient_model import FiLM
 class FiLMEfficientNet(nn.Module):
     def __init__(self, num_classes=1000):
         super().__init__()
-
         # Load EfficientNet backbone with pre-trained weights
         # blocks_args, global_params = get_model_params('efficientnet-b3', None)
         # self.backbone = EfficientNet(blocks_args=blocks_args, global_params=global_params)
         self.backbone = EfficientNet.from_pretrained('efficientnet-b3')
-
         # Replace MBConvBlock with FiLMBlock
         for idx, block in enumerate(self.backbone._blocks):
             if isinstance(block, EfficientNet.MBConvBlock):
                 self.backbone._blocks[idx] = FiLMBlock(block)
-
         # Replace the last linear layer with a new one
         self.classifier = nn.Linear(1280, num_classes)
 
@@ -52,16 +49,12 @@ if __name__ == "__main__":
     print(blocks_args)
     print('test')
     print(global_params)
-
     # pdb.set_trace()  # 设置断点
-
     model = EfficientNet(blocks_args=blocks_args, global_params=global_params)
     input_tensor = torch.randn(6, 3, 300, 300)
     # context_embed = torch.randn(2,3)
     # output_tensor = model(input_tensor,context_embed)
     output_tensor = model(input_tensor)
-    # for idx, block in enumerate(model._blocks):
-
     for idx, block in enumerate(model._blocks):
         print(f"Block {idx+1} output shape: {block._project_conv.weight.shape}")
     print((output_tensor.shape))

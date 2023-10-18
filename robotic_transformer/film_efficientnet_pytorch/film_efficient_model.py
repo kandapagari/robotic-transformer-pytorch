@@ -46,8 +46,8 @@ class FiLMEfficientNet(nn.Module):
 
         # define the USEncoder
         self.USEncoder = USEncoder
-
-    # Load EfficientNet backbone with pre-trained weights, copy the weight to the backbone model
+        # Load EfficientNet backbone with pre-trained weights,
+        # copy the weight to the backbone model
         # pretrained_backbone = EfficientNet.from_pretrained('efficientnet-b3')
         self.backbone = backbone
         self.backbone._blocks_args, self.backbone._global_params = get_model_params(
@@ -55,25 +55,18 @@ class FiLMEfficientNet(nn.Module):
         self.backbone = EfficientNet(
             blocks_args=self.backbone._blocks_args, global_params=self.backbone._global_params)
         self.backbone.load_state_dict(pretrained_backbone.state_dict())
-
         # self._swish = MemoryEfficientSwish()
-
         # self.film = FiLM(self.USEncoder._hidden_size, out_channels)
         self.backbone_with_film = []
-
         # Replace or append MBConvBlock with FiLMBlock, 添加到一个新的modulelist中去
         for block in self.backbone._blocks:
             # self.backbone._blocks[idx] = FiLMBlock(block)
             self.backbone_with_film.append(block)
             self.backbone_with_film.append(
                 FiLM(self.USEncoder._hidden_size, block._bn2.num_features))
-
         self.backbone_with_film = nn.ModuleList(self.backbone_with_film)
-
         self.Linear_1b1_conv = nn.Conv2d(1536, 512, 1)
-
         self.tokenlearner = TokenLearner(S=8)
-
         # Replace the last linear layer with a new one
         self.classifier = nn.Linear(1280, num_classes)
 
@@ -85,7 +78,6 @@ class FiLMEfficientNet(nn.Module):
         inputs = x
         x = self.backbone._swish(self.backbone._bn0(
             self.backbone._conv_stem(inputs)))
-
         for block in self.backbone_with_film:
             if isinstance(block, MBConvBlock):
                 # if 'MBConv' in block.name:
@@ -95,13 +87,10 @@ class FiLMEfficientNet(nn.Module):
                 x = block(x, context)
         x = self.backbone._swish(
             self.backbone._bn1(self.backbone._conv_head(x)))
-
         # 添加通道转换的卷积模块，从efficientnet最后的1536通道转为512通道
         x = self.Linear_1b1_conv(x)
-
         x = x.permute(0, 2, 3, 1)
         x = self.tokenlearner(x)
-
         # 原来的模型尾部处理注释掉，主要是为了提取融合instruction的特征
         # x = self.backbone.extract_features(x)  # Get features from the backbone
         # x = self.backbone._avg_pooling(x)  # Global average pooling
@@ -134,15 +123,12 @@ if __name__ == '__main__':
     USEncoder_model = USEncoder()
     pretrained_backbone = EfficientNet.from_pretrained('efficientnet-b3')
     tklr = TokenLearner
-
     model = FiLMEfficientNet(USEncoder_model, pretrained_backbone, tklr)
     # blocks_args, global_params = get_model_params('efficientnet-b3', None)
     # print(blocks_args)
     # print('test')
     # print(global_params)
-
     # pdb.set_trace()  # 设置断点
-
     # model = EfficientNet(blocks_args=blocks_args, global_params=global_params)
     # with open('output.txt', 'w') as f:
     #     # 重定向标准输出到文件对象
@@ -150,7 +136,6 @@ if __name__ == '__main__':
     #     # print('This is a test.', file=f)
     #     for name, module in model.named_modules():
     #         print(name, module, file=f)
-
     input_tensor = torch.randn(6, 3, 300, 300)
     sentences = ["Pick apple from top drawer and place on counter."]
     # USE_model = USEncoder()

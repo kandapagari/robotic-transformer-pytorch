@@ -47,7 +47,6 @@ class FiLMEfficientNet(nn.Module):
     def __init__(self, num_classes=1000):
         super().__init__()
         self.backbone = EfficientNet.from_pretrained('efficientnet-b3')
-
         # Add FiLM blocks after every block in the backbone
         for i in range(len(self.backbone._blocks)):
             block = self.backbone._blocks[i]
@@ -55,9 +54,7 @@ class FiLMEfficientNet(nn.Module):
             out_features = block._project_conv.out_channels
             film_block = FiLMBlock(in_features, out_features)
             setattr(self, f'film{i}', film_block)
-
         self.classifier = nn.Linear(1280, num_classes)
-
         # Initialize the FiLM blocks to zero
         for m in self.modules():
             if isinstance(m, FiLMBlock):
@@ -70,7 +67,6 @@ class FiLMEfficientNet(nn.Module):
             x = block(x)
             film_block = getattr(self, f'film{i}')
             x = film_block(x, context)
-
         # Head
         x = self.backbone._swish(
             self.backbone._bn1(self.backbone._conv_head(x)))
@@ -86,10 +82,8 @@ if __name__ == '__main__':
     model = EfficientNet(blocks_args=blocks_args, global_params=global_params)
     input_tensor = torch.randn(6, 3, 300, 300)
     # summary(model, (input_tensor))
-
     # context_embed = torch.randn(2,3)
     # output_tensor = model(input_tensor,context_embed)
-
     output_tensor = model(input_tensor)
     for idx, block in enumerate(model._blocks):
         print(f"Block {idx+1} output shape: {block._project_conv.weight.shape}")

@@ -153,16 +153,13 @@ class ViT(nn.Module):
         super().__init__()
         image_height, image_width = pair(image_size)
         patch_height, patch_width = pair(patch_size)
-
         assert image_height % patch_height == 0 and image_width % patch_width == 0, \
             'Image dimensions must be divisible by the patch size.'
-
         num_patches = (image_height // patch_height) * \
             (image_width // patch_width)
         patch_dim = channels * patch_height * patch_width
         assert pool in {
             'cls', 'mean'}, 'pool type must be either cls (cls token) or mean (mean pooling)'
-
         self.to_patch_embedding = nn.Sequential(
             Rearrange('b c (h p1) (w p2) -> b (h w) (p1 p2 c)',
                       p1=patch_height, p2=patch_width),
@@ -174,13 +171,10 @@ class ViT(nn.Module):
         self.pos_embedding = nn.Parameter(torch.randn(1, num_patches + 1, dim))
         self.cls_token = nn.Parameter(torch.randn(1, 1, dim))
         self.dropout = nn.Dropout(emb_dropout)
-
         self.transformer = Transformer(
             dim, depth, heads, dim_head, mlp_dim, dropout)
-
         self.pool = pool
         self.to_latent = nn.Identity()
-
         self.mlp_head = nn.Sequential(
             nn.LayerNorm(dim),
             nn.Linear(dim, num_classes)
@@ -194,11 +188,8 @@ class ViT(nn.Module):
         x = torch.cat((cls_tokens, x), dim=1)
         x += self.pos_embedding[:, :(n + 1)]
         x = self.dropout(x)
-
         x = self.transformer(x)
-
         x = x.mean(dim=1) if self.pool == 'mean' else x[:, 0]
-
         x = self.to_latent(x)
         return self.mlp_head(x)
 
@@ -207,7 +198,6 @@ class Transformers_Decoder(nn.Module):
     def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout=0., d_model=512,
                  max_seq_len=48, num_actions=11, vocab_size=256):
         super().__init__()
-
         self.positionalencoding = PositionalEncoding(d_model, max_seq_len)
         self.dropout = nn.Dropout(dropout)
         self.transformer = Transformer(dim, depth, heads, dim_head, mlp_dim)

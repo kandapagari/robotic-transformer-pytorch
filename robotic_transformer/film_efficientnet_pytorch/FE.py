@@ -9,15 +9,12 @@ from efficientnet_pytorch import EfficientNet
 class FiLMEfficientNet(nn.Module):
     def __init__(self):
         super(FiLMEfficientNet, self).__init__()
-
         # 加载EfficientNet模型，并冻结所有层
         self.efficientnet = EfficientNet.from_pretrained('efficientnet-b3')
         for param in self.efficientnet.parameters():
             param.requires_grad = False
-
         # 获取EfficientNet模型的MBConvBlock模块
         self.mbconv_block = self.efficientnet._blocks[-1]
-
         # 定义FiLM模块
         self.gamma_fc = nn.Linear(2048, 2048)
         self.beta_fc = nn.Linear(2048, 2048)
@@ -25,7 +22,6 @@ class FiLMEfficientNet(nn.Module):
     def forward(self, x):
         x = self.efficientnet._swish(
             self.efficientnet._bn0(self.efficientnet._conv_stem(x)))
-
         # 在MBConvBlock模块后添加FiLM模块
         for idx, block in enumerate(self.efficientnet._blocks):
             drop_connect_rate = self.efficientnet._global_params.drop_connect_rate
@@ -39,7 +35,6 @@ class FiLMEfficientNet(nn.Module):
                     x = block(x, drop_connect_rate)
             else:
                 x = block(x)
-
         # 加入EfficientNet模型的其余部分
         x = self.efficientnet._conv_head(x)
         x = self.efficientnet._avg_pooling(x)

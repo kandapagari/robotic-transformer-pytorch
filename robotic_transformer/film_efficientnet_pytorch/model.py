@@ -14,8 +14,6 @@
    They are built to mirror those in the official TensorFlow implementation.
 """
 
-import sys
-
 import torch
 # Author: lukemelas (github username)
 # Github repo: https://github.com/lukemelas/EfficientNet-PyTorch
@@ -29,10 +27,6 @@ from film_efficientnet_pytorch.utils import (MemoryEfficientSwish, Swish,
                                              round_filters, round_repeats)
 from torch import nn
 from torch.nn import functional as F
-
-sys.path.append(
-    '/LOG/realman/LLM/robotic-transformer-pytorch/film_efficientnet_pytorch')
-
 
 VALID_MODELS = (
     'efficientnet-b0', 'efficientnet-b1', 'efficientnet-b2', 'efficientnet-b3',
@@ -68,7 +62,6 @@ class MBConvBlock(nn.Module):
             0 < self._block_args.se_ratio <= 1)
         # whether to use skip connection and drop connect
         self.id_skip = block_args.id_skip
-
         # Expansion phase (Inverted Bottleneck)
         inp = self._block_args.input_filters  # number of input channels
         oup = self._block_args.input_filters * \
@@ -80,7 +73,6 @@ class MBConvBlock(nn.Module):
             self._bn0 = nn.BatchNorm2d(
                 num_features=oup, momentum=self._bn_mom, eps=self._bn_eps)
             # image_size = calculate_output_image_size(image_size, 1) <-- this wouldn't modify image_size # NOQA
-
         # Depthwise convolution phase
         k = self._block_args.kernel_size
         s = self._block_args.stride
@@ -91,7 +83,6 @@ class MBConvBlock(nn.Module):
         self._bn1 = nn.BatchNorm2d(
             num_features=oup, momentum=self._bn_mom, eps=self._bn_eps)
         image_size = calculate_output_image_size(image_size, s)
-
         # Squeeze and Excitation layer, if desired
         if self.has_se:
             Conv2d = get_same_padding_conv2d(image_size=(1, 1))
@@ -101,7 +92,6 @@ class MBConvBlock(nn.Module):
                 in_channels=oup, out_channels=num_squeezed_channels, kernel_size=1)
             self._se_expand = Conv2d(
                 in_channels=num_squeezed_channels, out_channels=oup, kernel_size=1)
-
         # Pointwise convolution phase
         final_oup = self._block_args.output_filters
         Conv2d = get_same_padding_conv2d(image_size=image_size)
@@ -128,11 +118,9 @@ class MBConvBlock(nn.Module):
             x = self._expand_conv(inputs)
             x = self._bn0(x)
             x = self._swish(x)
-
         x = self._depthwise_conv(x)
         x = self._bn1(x)
         x = self._swish(x)
-
         # Squeeze and Excitation
         if self.has_se:
             x_squeezed = F.adaptive_avg_pool2d(x, 1)
@@ -140,11 +128,9 @@ class MBConvBlock(nn.Module):
             x_squeezed = self._swish(x_squeezed)
             x_squeezed = self._se_expand(x_squeezed)
             x = torch.sigmoid(x_squeezed) * x
-
         # Pointwise Convolution
         x = self._project_conv(x)
         x = self._bn2(x)
-
         # Skip connection and drop connect
         input_filters, output_filters = self._block_args.input_filters, \
             self._block_args.output_filters
@@ -192,15 +178,12 @@ class EfficientNet(nn.Module):
         assert len(blocks_args) > 0, 'block args must be greater than 0'
         self._global_params = global_params
         self._blocks_args = blocks_args
-
         # Batch norm parameters
         bn_mom = 1 - self._global_params.batch_norm_momentum
         bn_eps = self._global_params.batch_norm_epsilon
-
         # Get stem static or dynamic convolution depending on image size
         image_size = global_params.image_size
         Conv2d = get_same_padding_conv2d(image_size=image_size)
-
         # Stem
         in_channels = 3  # rgb
         # number of output channels
@@ -210,11 +193,9 @@ class EfficientNet(nn.Module):
         self._bn0 = nn.BatchNorm2d(
             num_features=out_channels, momentum=bn_mom, eps=bn_eps)
         image_size = calculate_output_image_size(image_size, 2)
-
         # Build blocks
         self._blocks = nn.ModuleList([])
         for block_args in self._blocks_args:
-
             # Update block input and output filters based on depth multiplier.
             block_args = block_args._replace(
                 input_filters=round_filters(
@@ -224,7 +205,6 @@ class EfficientNet(nn.Module):
                 num_repeat=round_repeats(
                     block_args.num_repeat, self._global_params)
             )
-
             # The first block needs to take care of stride and filter size increase.
             self._blocks.append(MBConvBlock(
                 block_args, self._global_params, image_size=image_size))
@@ -237,7 +217,6 @@ class EfficientNet(nn.Module):
                 self._blocks.append(MBConvBlock(
                     block_args, self._global_params, image_size=image_size))
                 # image_size = calculate_output_image_size(image_size, block_args.stride)  # stride = 1  # NOQA
-
         # Head
         in_channels = block_args.output_filters  # output of final block
         out_channels = round_filters(1280, self._global_params)
@@ -246,13 +225,11 @@ class EfficientNet(nn.Module):
             in_channels, out_channels, kernel_size=1, bias=False)
         self._bn1 = nn.BatchNorm2d(
             num_features=out_channels, momentum=bn_mom, eps=bn_eps)
-
         # Final linear layer
         self._avg_pooling = nn.AdaptiveAvgPool2d(1)
         if self._global_params.include_top:
             self._dropout = nn.Dropout(self._global_params.dropout_rate)
             self._fc = nn.Linear(out_channels, self._global_params.num_classes)
-
         # set activation to memory efficient swish by default
         self._swish = MemoryEfficientSwish()
 
@@ -291,11 +268,9 @@ class EfficientNet(nn.Module):
                 >>> print(endpoints['reduction_6'].shape)  # torch.Size([1, 1280, 7, 7])
         """
         endpoints = {}
-
         # Stem
         x = self._swish(self._bn0(self._conv_stem(inputs)))
         prev_x = x
-
         # Blocks
         for idx, block in enumerate(self._blocks):
             drop_connect_rate = self._global_params.drop_connect_rate
@@ -308,7 +283,6 @@ class EfficientNet(nn.Module):
             elif idx == len(self._blocks) - 1:
                 endpoints[f'reduction_{len(endpoints) + 1}'] = x
             prev_x = x
-
         # Head
         x = self._swish(self._bn1(self._conv_head(x)))
         endpoints[f'reduction_{len(endpoints) + 1}'] = x
@@ -328,7 +302,6 @@ class EfficientNet(nn.Module):
         # Stem
         x = self._swish(self._bn0(self._conv_stem(inputs)))
         print('After stem:', x.shape)
-
         # Blocks
         for idx, block in enumerate(self._blocks):
             drop_connect_rate = self._global_params.drop_connect_rate
@@ -338,11 +311,9 @@ class EfficientNet(nn.Module):
             x = block(x, drop_connect_rate=drop_connect_rate)
             # x = block(x)
             print(f'the {idx + 1} block of MBConv shape is {x.shape}!')
-
         # Head
         x = self._swish(self._bn1(self._conv_head(x)))
         print('After head:', x.shape)
-
         return x
 
     def forward(self, inputs):
