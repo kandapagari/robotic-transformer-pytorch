@@ -1,6 +1,4 @@
 # -*- coding: utf-8 -*-
-from typing import List, Optional
-
 import torch
 from beartype import beartype
 from classifier_free_guidance_pytorch import (AttentionTextConditioner,
@@ -73,7 +71,7 @@ class RT1(nn.Module):
     def forward(
         self,
         video,
-        texts: Optional[List[str]] = None,
+        texts: list[str] | None = None,
         cond_drop_prob=0.
     ):
         depth = self.transformer_depth
