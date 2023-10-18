@@ -1,11 +1,4 @@
 # -*- coding: utf-8 -*-
-# ——————————————————————————————————————————————————————————
-# 仍然需要去掉Tokenizer干扰路径
-import sys
-
-if '/LOG/realman/LLM/robotics_transformer' in sys.path:
-    sys.path.remove('/LOG/realman/LLM/robotics_transformer')
-# —————————————————————————————————————————————————————————
 import torch
 import torch.nn as nn
 from transformers import AutoModel, AutoTokenizer

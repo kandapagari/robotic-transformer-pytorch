@@ -41,7 +41,6 @@ class FiLMEfficientNet(nn.Module):
         x = x.flatten(start_dim=1)
         x = self.efficientnet._dropout(x)
         x = self.efficientnet._fc(x)
-
         return x
 
 

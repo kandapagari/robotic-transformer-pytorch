@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-"""utils.py - Helper functions for building the model and for loading model parameters.
-   These helper functions are built to mirror those in the official TensorFlow implementation.
+"""
+utils.py - Helper functions for building the model and for loading model parameters.
+These helper functions are built to mirror those in the official TensorFlow implementation.
 """
 
 # Author: lukemelas (github username)
@@ -246,12 +247,12 @@ class Conv2dDynamicSamePadding(nn.Conv2d):
         sh, sw = self.stride
         # change the output size according to stride ! ! !
         oh, ow = math.ceil(ih / sh), math.ceil(iw / sw)
-        pad_h = max((oh - 1) * self.stride[0] +
+        pad_h = max((oh - 1) * self.stride[0] + # NOQA
                     (kh - 1) * self.dilation[0] + 1 - ih, 0)
-        pad_w = max((ow - 1) * self.stride[1] +
+        pad_w = max((ow - 1) * self.stride[1] + # NOQA
                     (kw - 1) * self.dilation[1] + 1 - iw, 0)
         if pad_h > 0 or pad_w > 0:
-            x = F.pad(x, [pad_w // 2, pad_w - pad_w //
+            x = F.pad(x, [pad_w // 2, pad_w - pad_w // # NOQA
                       2, pad_h // 2, pad_h - pad_h // 2])
         return F.conv2d(x, self.weight, self.bias, self.stride, self.padding, self.dilation,
                         self.groups)
@@ -279,9 +280,9 @@ class Conv2dStaticSamePadding(nn.Conv2d):
         kh, kw = self.weight.size()[-2:]
         sh, sw = self.stride
         oh, ow = math.ceil(ih / sh), math.ceil(iw / sw)
-        pad_h = max((oh - 1) * self.stride[0] +
+        pad_h = max((oh - 1) * self.stride[0] + # NOQA
                     (kh - 1) * self.dilation[0] + 1 - ih, 0)
-        pad_w = max((ow - 1) * self.stride[1] +
+        pad_w = max((ow - 1) * self.stride[1] + # NOQA
                     (kw - 1) * self.dilation[1] + 1 - iw, 0)
         if pad_h > 0 or pad_w > 0:
             self.static_padding = nn.ZeroPad2d((pad_w // 2, pad_w - pad_w // 2,
@@ -335,12 +336,12 @@ class MaxPool2dDynamicSamePadding(nn.MaxPool2d):
         kh, kw = self.kernel_size
         sh, sw = self.stride
         oh, ow = math.ceil(ih / sh), math.ceil(iw / sw)
-        pad_h = max((oh - 1) * self.stride[0] +
+        pad_h = max((oh - 1) * self.stride[0] + # NOQA
                     (kh - 1) * self.dilation[0] + 1 - ih, 0)
-        pad_w = max((ow - 1) * self.stride[1] +
+        pad_w = max((ow - 1) * self.stride[1] + # NOQA
                     (kw - 1) * self.dilation[1] + 1 - iw, 0)
         if pad_h > 0 or pad_w > 0:
-            x = F.pad(x, [pad_w // 2, pad_w - pad_w //
+            x = F.pad(x, [pad_w // 2, pad_w - pad_w // # NOQA
                       2, pad_h // 2, pad_h - pad_h // 2])
         return F.max_pool2d(x, self.kernel_size, self.stride, self.padding,
                             self.dilation, self.ceil_mode, self.return_indices)
@@ -369,9 +370,9 @@ class MaxPool2dStaticSamePadding(nn.MaxPool2d):
         kh, kw = self.kernel_size
         sh, sw = self.stride
         oh, ow = math.ceil(ih / sh), math.ceil(iw / sw)
-        pad_h = max((oh - 1) * self.stride[0] +
+        pad_h = max((oh - 1) * self.stride[0] + # NOQA
                     (kh - 1) * self.dilation[0] + 1 - ih, 0)
-        pad_w = max((ow - 1) * self.stride[1] +
+        pad_w = max((ow - 1) * self.stride[1] + # NOQA
                     (kw - 1) * self.dilation[1] + 1 - iw, 0)
         if pad_h > 0 or pad_w > 0:
             self.static_padding = nn.ZeroPad2d(
@@ -422,7 +423,7 @@ class BlockDecoder(object):
                 key, value = splits[:2]
                 options[key] = value
         # Check stride
-        assert (('s' in options and len(options['s']) == 1) or
+        assert (('s' in options and len(options['s']) == 1) or # NOQA
                 (len(options['s']) == 2 and options['s'][0] == options['s'][1]))
         return BlockArgs(
             num_repeat=int(options['r']),
@@ -611,7 +612,7 @@ url_map_advprop = {
     'efficientnet-b8': 'https://github.com/lukemelas/EfficientNet-PyTorch/releases/download/1.0/adv-efficientnet-b8-22a8fe65.pth',  # NOQA
 }
 
-# TODO: add the petrained weights url map of 'efficientnet-l2'
+# TODO: add the pretrained weights url map of 'efficientnet-l2'
 
 
 def load_pretrained_weights(model, model_name, weights_path=None, load_fc=True, advprop=False,

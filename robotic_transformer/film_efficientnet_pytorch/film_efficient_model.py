@@ -4,10 +4,14 @@
 import torch
 import torch.nn as nn
 import torch.nn.init as init
-from film_efficientnet_pytorch.model import EfficientNet, MBConvBlock
-from film_efficientnet_pytorch.tokenlearner_pytorch import TokenLearner
-from film_efficientnet_pytorch.USE import USEncoder
-from film_efficientnet_pytorch.utils import get_model_params
+
+from robotic_transformer.film_efficientnet_pytorch.model import (EfficientNet,
+                                                                 MBConvBlock)
+from robotic_transformer.film_efficientnet_pytorch.tokenlearner_pytorch import \
+    TokenLearner
+from robotic_transformer.film_efficientnet_pytorch.USE import USEncoder
+from robotic_transformer.film_efficientnet_pytorch.utils import \
+    get_model_params
 
 # import pdb
 # print(dir(EfficientNet))

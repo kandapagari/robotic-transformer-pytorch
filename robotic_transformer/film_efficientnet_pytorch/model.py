@@ -10,23 +10,22 @@
 # """model.py - Model and module class for EfficientNet.
 #    They are built to mirror those in the official TensorFlow implementation.
 # ------------------------------------------------------------------------
-"""model.py - Model and module class for EfficientNet.
-   They are built to mirror those in the official TensorFlow implementation.
+"""
+model.py - Model and module class for EfficientNet.
+They are built to mirror those in the official TensorFlow implementation.
 """
 
 import torch
+from torch import nn
+from torch.nn import functional as F
+
 # Author: lukemelas (github username)
 # Github repo: https://github.com/lukemelas/EfficientNet-PyTorch
 # With adjustments and added comments by workingcoder (github username).
-from film_efficientnet_pytorch.utils import (MemoryEfficientSwish, Swish,
-                                             calculate_output_image_size,
-                                             drop_connect, efficientnet_params,
-                                             get_model_params,
-                                             get_same_padding_conv2d,
-                                             load_pretrained_weights,
-                                             round_filters, round_repeats)
-from torch import nn
-from torch.nn import functional as F
+from robotic_transformer.film_efficientnet_pytorch.utils import (
+    MemoryEfficientSwish, Swish, calculate_output_image_size, drop_connect,
+    efficientnet_params, get_model_params, get_same_padding_conv2d,
+    load_pretrained_weights, round_filters, round_repeats)
 
 VALID_MODELS = (
     'efficientnet-b0', 'efficientnet-b1', 'efficientnet-b2', 'efficientnet-b3',
