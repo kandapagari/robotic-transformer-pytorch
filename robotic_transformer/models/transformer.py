@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Callable, Optional, Tuple
+from typing import Callable
 
 from beartype import beartype
 from torch import nn
@@ -32,7 +32,7 @@ class Transformer(nn.Module):
     def forward(
         self,
         x,
-        cond_fns: Optional[Tuple[Callable, ...]] = None,
+        cond_fns: tuple[Callable, ...] | None = None,
         attn_mask=None
     ):
         cond_fns = iter(default(cond_fns, []))
