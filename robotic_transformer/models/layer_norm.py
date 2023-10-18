@@ -1,7 +1,8 @@
-from torch import nn
+# -*- coding: utf-8 -*-
 import torch
-
 import torch.nn.functional as F
+from torch import nn
+
 
 class LayerNorm(nn.Module):
     def __init__(self, dim):

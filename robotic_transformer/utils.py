@@ -1,5 +1,6 @@
-from einops import pack, unpack
+# -*- coding: utf-8 -*-
 import torch
+from einops import pack, unpack
 
 
 def exists(val):

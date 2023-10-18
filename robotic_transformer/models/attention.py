@@ -1,11 +1,12 @@
-from torch import nn, einsum
-import torch
+# -*- coding: utf-8 -*-
+from typing import Callable, Optional
 
-from models import LayerNorm
-from einops import repeat, rearrange
-from utils import default, exists
-from typing import Optional, Callable
+import torch
 import torch.nn.functional as F
+from einops import rearrange, repeat
+from models import LayerNorm
+from torch import einsum, nn
+from utils import default, exists
 
 
 class Attention(nn.Module):
@@ -51,7 +52,7 @@ class Attention(nn.Module):
 
     def forward(self, x):
         batch, height, width, window_height, window_width, _, device, h = * \
-            x.shape, x.device, self.heads
+            x.shape, x.device, self.heads  # NOQA
 
         x = self.norm(x)
         # flatten
@@ -126,7 +127,7 @@ class TransformerAttention(nn.Module):
         attn_mask=None,
         cond_fn: Optional[Callable] = None
     ):
-        b = x.shape[0]
+        b = x.shape[0]  # NOQA
         if exists(context):
             context = self.context_norm(context)
         kv_input = default(context, x)

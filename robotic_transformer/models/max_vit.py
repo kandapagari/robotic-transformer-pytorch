@@ -1,11 +1,12 @@
-from torch import nn
-from utils import default
+# -*- coding: utf-8 -*-
+from typing import Callable, List, Optional, Tuple
+
 from beartype import beartype
-from typing import Optional, List, Tuple, Callable
 from einops.layers.torch import Rearrange, Reduce
-from models import MBConv, FeedForward, Residual, LayerNorm
-from utils import exists
+from models import FeedForward, LayerNorm, MBConv, Residual
 from models.attention import Attention
+from torch import nn
+from utils import default, exists
 
 
 class MaxViT(nn.Module):

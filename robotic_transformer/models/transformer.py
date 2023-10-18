@@ -1,8 +1,10 @@
-from torch import nn
+# -*- coding: utf-8 -*-
+from typing import Callable, Optional, Tuple
+
 from beartype import beartype
-from models.attention import TransformerAttention
 from models import FeedForward
-from typing import Optional, Tuple, Callable
+from models.attention import TransformerAttention
+from torch import nn
 from utils import default
 
 

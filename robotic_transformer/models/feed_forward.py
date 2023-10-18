@@ -1,7 +1,7 @@
-from torch import nn
-
-from utils import exists
+# -*- coding: utf-8 -*-
 from models import LayerNorm
+from torch import nn
+from utils import exists
 
 
 class FeedForward(nn.Module):

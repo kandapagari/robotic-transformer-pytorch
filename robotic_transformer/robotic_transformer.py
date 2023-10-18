@@ -1,17 +1,16 @@
-import torch
-from torch import nn
-
+# -*- coding: utf-8 -*-
 from typing import List, Optional
+
+import torch
 from beartype import beartype
-
-from einops import repeat, reduce, rearrange
-from einops.layers.torch import Rearrange
-
-from classifier_free_guidance_pytorch import (TextConditioner, AttentionTextConditioner,
+from classifier_free_guidance_pytorch import (AttentionTextConditioner,
+                                              TextConditioner,
                                               classifier_free_guidance)
-
-from utils import default, pack_one, unpack_one, posemb_sincos_1d
-from models import LayerNorm, TokenLearner, Transformer, MaxViT
+from einops import rearrange, reduce, repeat
+from einops.layers.torch import Rearrange
+from models import LayerNorm, MaxViT, TokenLearner, Transformer
+from torch import nn
+from utils import default, pack_one, posemb_sincos_1d, unpack_one
 
 
 @beartype

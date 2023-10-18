@@ -1,6 +1,8 @@
-from torch import nn
+# -*- coding: utf-8 -*-
 import torch
 from einops.layers.torch import Rearrange, Reduce
+from torch import nn
+
 
 class SqueezeExcitation(nn.Module):
     def __init__(self, dim, shrinkage_rate=0.25):
