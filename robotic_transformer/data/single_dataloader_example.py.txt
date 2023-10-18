@@ -1,0 +1,15 @@
+# -*- coding: utf-8 -*-
+import torch
+from tfrecord.torch.dataset import TFRecordDataset
+
+DATASET_ROOT = '/data/net/ml_data/google_dataset/'
+FILENAME = 'fractal_fractal_20220817_data_traj_transform_rt_1_without_filters_disable_episode_padding_seq_length_6_no_preprocessor'  # NOQA
+SPLIT = 'train'
+tfrecord_path = f"{DATASET_ROOT}/rt-1-data-release/{FILENAME}-{SPLIT}.array_record-00000-of-01024"
+index_path = None
+description = {"image": "byte", "label": "float"}
+dataset = TFRecordDataset(tfrecord_path, index_path, description)
+loader = torch.utils.data.DataLoader(dataset, batch_size=2)
+
+data = next(iter(loader))
+print(data)

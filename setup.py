@@ -22,6 +22,8 @@ setup(
         'classifier-free-guidance-pytorch>=0.1.4',
         'einops>=0.6',
         'torch>=1.6',
+        'efficientnet-pytorch>=0.7.1',
+        'tfrecord>=1.14.4'
     ],
     classifiers=[
         'Development Status :: 4 - Beta',
