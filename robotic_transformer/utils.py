@@ -1,25 +1,30 @@
 # -*- coding: utf-8 -*-
+from typing import TypeVar
+
 import torch
 from einops import pack, unpack
 
+T = TypeVar("T")
+U = TypeVar("U")
 
-def exists(val):
+
+def exists(val: T) -> T | bool:
     return val is not None
 
 
-def default(val, d):
+def default(val: T, d: U) -> T | U:
     return val if exists(val) else d
 
 
-def cast_tuple(val, length=1):
+def cast_tuple(val: T, length: int = 1) -> tuple:
     return val if isinstance(val, tuple) else ((val,) * length)
 
 
-def pack_one(x, pattern):
+def pack_one(x: T, pattern: str) -> tuple:
     return pack([x], pattern)
 
 
-def unpack_one(x, ps, pattern):
+def unpack_one(x: T, ps: list, pattern: str):
     return unpack(x, ps, pattern)[0]
 
 
