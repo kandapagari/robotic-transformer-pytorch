@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from typing import Callable, Optional
+from typing import Callable
 
 import torch
 import torch.nn.functional as F
@@ -126,7 +126,7 @@ class TransformerAttention(nn.Module):
         mask=None,
         attn_bias=None,
         attn_mask=None,
-        cond_fn: Optional[Callable] = None
+        cond_fn: Callable | None = None
     ):
         b = x.shape[0]  # NOQA
         if exists(context):
