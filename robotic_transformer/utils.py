@@ -8,7 +8,7 @@ T = TypeVar("T")
 U = TypeVar("U")
 
 
-def exists(val: T) -> T | bool:
+def exists(val: T) -> bool:
     return val is not None
 
 
