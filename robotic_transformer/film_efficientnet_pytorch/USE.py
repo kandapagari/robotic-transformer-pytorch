@@ -24,6 +24,8 @@ class USEncoder(nn.Module):
         # 使用分词器将句子转换为token
         tokens = self.tokenizer(sentences, padding=True,
                                 truncation=True, return_tensors="pt")
+        device = self.model.device
+        tokens = {k: v.to(device) for k, v in tokens.items()}
         # 获取句子的向量表示
         with torch.no_grad():
             outputs = self.model(**tokens)

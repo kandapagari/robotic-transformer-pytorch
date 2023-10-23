@@ -65,6 +65,15 @@ class RT1model(nn.Module):
         # Replace the last linear layer with a new one
         self.classifier = nn.Linear(1280, num_classes)
 
+    def to(self, device):
+        self.USEncoder.to(device)
+        self.backbone.to(device)
+        self.backbone_with_film.to(device)
+        self.Linear_1b1_conv.to(device)
+        self.tokenlearner.to(device)
+        self.transformers_decoder.to(device)
+        return self
+
     def forward(self, x, context_sentences):
         # context换成sentences，然后把相关的处理放到前向函数中来！
         context = self.USEncoder(context_sentences)

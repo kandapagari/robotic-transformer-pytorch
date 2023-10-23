@@ -76,6 +76,7 @@ class PositionalEncoding(torch.nn.Module):
 
     def forward(self, x):
         batch_size, seq_len, _ = x.size()
+        self.positional_encoding = self.positional_encoding.to(x.device)
         x = x + self.positional_encoding[:, :seq_len, :]
         return x
 
